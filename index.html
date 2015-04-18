@@ -80,14 +80,22 @@ precision mediump float;
 varying vec2 st;
 varying vec3 n;
 uniform sampler2D dm;
+uniform sampler2D palette;
+uniform vec3 team_col;
 
 void main () {
 	vec4 texel = texture2D (dm, st);
+	vec4 ptexel = texture2D (palette, st);
 
 	vec3 nn = normalize (n);
 	vec3 fwd = normalize (vec3 (1.0, 1.0, -5.0));
 	
 	gl_FragColor.rgb = texel.rgb * dot (nn, fwd) + 0.2 * texel.rgb;
+	
+	// team colour
+	float pfac = (ptexel.x + ptexel.y + ptexel.z) * 0.33;
+	gl_FragColor.rgb = mix (gl_FragColor.rgb, team_col, pfac);
+	
 	gl_FragColor.a = texel.a;
 }
 </script>

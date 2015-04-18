@@ -75,7 +75,7 @@ function load_font_meta (meta) {
 }
 
 function load_font (image, meta) {
-	font_texture = create_texture_from_file (image);
+	font_texture = create_texture_from_file (image, true);
 	load_font_meta (meta);
 }
 

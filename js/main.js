@@ -9,7 +9,7 @@ var time_step_accum_s = 0.0;
 // updates at 100Hz
 var time_step_size_s = 0.01;
 
-var font_img = "textures/freemono.png"
+var font_img = "textures/freemono_inv.png"
 var font_meta = "fonts/freemono.meta"
 
 //
@@ -65,14 +65,10 @@ function draw_frame () {
 			draw_map ();
 			// ignore any depth values written by map so always-on-top
 			draw_city_icons ();
+			draw_texts ();
 			break;
 		default:
 	}
-	
-	// override depth buffer and always draw cities on top
-	//draw_city_icons ();
-	
-	draw_texts ();
 	
 	cam_dirty = false;
 }

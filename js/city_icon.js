@@ -1,9 +1,19 @@
-// city image file
+/*
+TODO:
+population remaining indicator
+--shrinking person/bar in 3d?
+--text tag same as city
+joke virus spread indicator?
+*/
+
+// city image files
 var city_icon_image = "textures/city.png";
+var city_icon_palette_image = "textures/city_palette.png";
 // city mesh file
 var city_mesh = "meshes/city.obj";
 // city texture
 var city_icon_tex;
+var city_icon_palette_tex;
 // VAO for mesh
 var city_vao;
 // # of vertex points in mesh
@@ -12,8 +22,16 @@ var city_pc;
 var city_icons = [];
 var city_PV_loc;
 var city_M_loc;
+var city_palette_loc;
+var city_team_col_loc;
 
-function add_city_icon (name_str, world_x, world_z) {
+//
+// name of city and
+// east/west pos on map between -20 (left) and +20 (right)
+// south/north pos on map between -10 (bottom) and +10 (top)
+// team_num is 0 (us) or 1 (them)
+//
+function add_city_icon (name_str, world_x, world_z, team_num) {
 	var font_px = 40.0;
 
 	var icon = new Object;
@@ -22,6 +40,7 @@ function add_city_icon (name_str, world_x, world_z) {
 	icon.y = 0.0;
 	icon.z = world_z;
 	icon.M = translate_mat4 (identity_mat4 (), [icon.x, icon.y, icon.z]);
+	icon.team_num = team_num;
 	city_icons.push (icon);
 
 	// convert city world coords to screen coords
@@ -31,12 +50,13 @@ function add_city_icon (name_str, world_x, world_z) {
 	screen_pos[0] /= screen_pos[3];
 	screen_pos[1] /= screen_pos[3];
 	screen_pos[2] /= screen_pos[3];
-	add_text (name_str, screen_pos[0], screen_pos[1], font_px, 0.0, 1.0, 0.0, 1.0);
+	add_text (name_str, screen_pos[0], screen_pos[1], font_px, 1.0, 1.0, 1.0, 1.0);
 }
 
 function init_city_icons () {
 	// texture
 	city_icon_tex = create_texture_from_file (city_icon_image);
+	city_icon_palette_tex = create_texture_from_file (city_icon_palette_image);
 	// mesh
 	city_vao = vao_ext.createVertexArrayOES ();
 	vao_ext.bindVertexArrayOES (city_vao);
@@ -56,15 +76,19 @@ function init_city_icons () {
 	gl.enableVertexAttribArray (2);
 
 	// dummy instances
-	add_city_icon ("Cape Town", 0.0, 3.0);
-	add_city_icon ("Singapore", 10.0, 0.0);
-	add_city_icon ("Seattle", -15.0, -5.0);
+	add_city_icon ("Cape Town", 1.0, 4.0, 0);
+	add_city_icon ("Singapore", 10.0, 0.0, 1);
+	add_city_icon ("Seattle", -15.0, -5.0, 1);
 	
 	city_PV_loc = get_uniform_loc (shader_progs[1], "PV");
 	city_M_loc = get_uniform_loc (shader_progs[1], "M");
+	city_palette_loc = get_uniform_loc (shader_progs[1], "palette");
+	city_team_col_loc = get_uniform_loc (shader_progs[1], "team_col");
 	
 	gl.useProgram (shader_progs[1]);
 	gl.uniformMatrix4fv (city_PV_loc, gl.FALSE, new Float32Array (PV));
+	gl.uniform1i (city_palette_loc, 1);
+	gl.uniform3f (city_team_col_loc, 0.2, 0.2, 0.2);
 }
 
 function draw_city_icons () {
@@ -75,11 +99,20 @@ function draw_city_icons () {
 	
 	gl.activeTexture (gl.TEXTURE0);
 	gl.bindTexture (gl.TEXTURE_2D, city_icon_tex);
+	gl.activeTexture (gl.TEXTURE1);
+	gl.bindTexture (gl.TEXTURE_2D, city_icon_palette_tex);
 
 	var n = city_icons.length;
 	for (var i = 0; i < n; i++) {
 		gl.uniformMatrix4fv (city_M_loc, gl.FALSE,
 			new Float32Array (city_icons[i].M));
+		if (city_icons[i].team_num == 0) {
+			gl.uniform3f (city_team_col_loc, 1.0, 0.0, 0.0);
+		} else if (city_icons[i].team_num == 1) {
+			gl.uniform3f (city_team_col_loc, 0.0, 0.0, 1.0);
+		} else {
+			gl.uniform3f (city_team_col_loc, 0.2, 0.2, 0.2);
+		}
 		vao_ext.bindVertexArrayOES (city_vao);
 		gl.drawArrays (gl.TRIANGLES, 0, city_pc);
 	}
