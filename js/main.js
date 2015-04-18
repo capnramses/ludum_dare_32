@@ -46,7 +46,9 @@ function init () {
 	init_map ();
 	init_city_icons ();
 	init_agent_icons ();
-	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
+//	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
+	
+	init_gui ();
 	
 	return true;
 }
@@ -58,6 +60,8 @@ function draw_frame () {
 	gl.clear (gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.viewport (0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight);
 	
+	var cd_at_st = cam_dirty;
+	
 	switch (game_state) {
 		case "title":
 			draw_title ();
@@ -67,12 +71,15 @@ function draw_frame () {
 			// ignore any depth values written by map so always-on-top
 			draw_city_icons ();
 			draw_agent_icons ();
+			draw_gui ();
 			draw_texts ();
 			break;
 		default:
 	}
 	
-	cam_dirty = false;
+	if (cd_at_st) {
+		//cam_dirty = false;
+	}
 }
 
 //
