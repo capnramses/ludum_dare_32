@@ -20,8 +20,8 @@ var color = d3.scale.category20();
 // calulate the edge cities as node=s
 vis = this;
 var force = d3.layout.force()
-    .charge(-70)
-    .linkDistance(30)
+    .charge(-30)
+    .linkDistance(20)
     .size([width, height]);
 
 var svg = d3.select("body").append("svg")
@@ -87,13 +87,25 @@ console.log("Starting grpah viewer executions");
 var g =  new game_graph();
 g.addCity("Dublin",10,2,0.5);
 g.addCity("London",100,4,0.1);
-g.addCity("New York", 150, 8, 0.1);
+g.addCity("New York", 150, 2, 0.1);
 g.addCity("Paris", 200, 4, 0.4);
+g.addCity("Delhi", 300, 8, 1.0);
+g.addCity("Sydney", 50, 3, 0.4);
+g.addCity("Moscow", 120, 4, 0.13);
+g.addCity("Tokyo", 160, 10, 0.05);
 
 g.connectCities("London", "Paris", 10);
 g.connectCities("Dublin", "London", 1);
 g.connectCities("London", "New York", 5);
+g.connectCities("Moscow", "Delhi", 1);
+g.connectCities("Tokyo", "Delhi", 4);
+g.connectCities("Tokyo", "Moscow", 8);
+g.connectCities("Sydney", "Delhi",2);
+g.connectCities("Sydney", "New York",2);
+
+
 g.deployComedian("Dylan Moran","Dublin", 1.0, "stand-up");
+g.deployComedian("Tim Minchin","Sydney", 1.0, "stand-up");
  var nodes = g.nodes();
 var edges = g.edges();
 var v = new graphViewer(nodes,edges);
