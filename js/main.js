@@ -1,3 +1,6 @@
+// game state stored as string
+var game_state = "title";
+
 // some test geometry to draw
 var quad_vao;
 // timers in seconds used for working out time steps
@@ -30,6 +33,7 @@ function init () {
 	gl.vertexAttribPointer (0, 2, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray (0);
 	
+	init_title ();
 	init_map ();
 	
 	return true;
@@ -42,14 +46,34 @@ function draw_frame () {
 	gl.clear (gl.COLOR_BUFFER_BIT);
 	gl.viewport (0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight);
 	
-	draw_map ();
+	switch (game_state) {
+		case "title":
+			draw_title ();
+			break;
+		case "map":
+			draw_map ();
+			break;
+		default:
+	}
 }
 
 //
 // main time-step based logic update function
 //
 function update () {
-	
+	switch (game_state) {
+		case "title":
+		
+			// do stuff
+		
+			break;
+		case "map":
+		
+			// do stuff
+		
+			break;
+		default:
+	}
 }
 
 function main_loop () {
