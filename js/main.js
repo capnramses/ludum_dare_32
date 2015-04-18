@@ -4,7 +4,7 @@ var game_state = "title";
 // some test geometry to draw
 var quad_vao;
 // timers in seconds used for working out time steps
-var prev_time_s;
+var previous_millis;
 var time_step_accum_s = 0.0;
 // updates at 100Hz
 var time_step_size_s = 0.01;
@@ -60,11 +60,11 @@ function draw_frame () {
 //
 // main time-step based logic update function
 //
-function update () {
+function update (elapsed) {
 	switch (game_state) {
 		case "title":
 		
-			// do stuff
+			update_title (elapsed);
 		
 			break;
 		case "map":
@@ -78,22 +78,17 @@ function update () {
 
 function main_loop () {
 	// update timers
-	var curr_time_s = (new Date).getTime () / 1000.0;
-	var elapsed_s = curr_time_s - prev_time_s;
-	prev_time_s = curr_time_s;
+	var current_millis = (new Date).getTime ();
+	var elapsed_millis = current_millis - previous_millis;
+	previous_millis = current_millis;
+	var elapsed_s = elapsed_millis / 1000.0;
 	time_step_accum_s += elapsed_s;
-	
 	// drawing
 	draw_frame ();
-	
 	// logic updates
 	while (time_step_accum_s >= time_step_size_s) {
+		update (time_step_size_s);
 		time_step_accum_s -= time_step_size_s;
-		
-		//
-		// call updates here, with elapsed time of "time_step_size_s"
-		//
-		
 	}
 
 	window.requestAnimFrame (main_loop, canvas);
@@ -108,6 +103,6 @@ function main () {
 		return;
 	}
 	// animate and do logic
-	prev_time = (new Date).getTime () / 1000.0;
+	previous_millis = (new Date).getTime ();
 	main_loop ();
 }
