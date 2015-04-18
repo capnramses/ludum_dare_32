@@ -45,7 +45,12 @@ var svg = d3.select("body").append("svg")
     .enter().append("circle")
       .attr("class", "node")
       .attr("r", 3)
-      .style("fill", function(d) { return color(d.colorIndex); })
+      .style("fill", function(d) { 
+    	  if(d.status == "alive") {
+    		  return color(d.colorIndex);
+    	  }
+    	  return "black"    	  
+      })
       .call(force.drag);
 
   node.append("title")
@@ -62,6 +67,18 @@ var svg = d3.select("body").append("svg")
 
 	});
 
+	vis.upateColors =  function() {
+
+		svg.selectAll(".node")
+			.data(nodes)
+            .style("fill", function(d) { 
+			  	  if(d.status == "alive") {
+			  		  return color(d.colorIndex);
+			  	  }
+			  	  return "black";    	  
+            })
+	}
+	
   return vis;
 }
 
@@ -76,6 +93,21 @@ g.addCity("Paris", 200, 4, 0.4);
 g.connectCities("London", "Paris", 10);
 g.connectCities("Dublin", "London", 1);
 g.connectCities("London", "New York", 5);
+g.deployComedian("Dylan Moran","Dublin", 1.0, "stand-up");
  var nodes = g.nodes();
 var edges = g.edges();
 var v = new graphViewer(nodes,edges);
+
+function executeTick () {
+	g.nextTurn();
+	vis.upateColors();
+	}
+
+d3.select("#tickButton").on("click", function() {
+	console.log("Button Clicked");
+	executeTick();
+	}
+) ;
+
+
+
