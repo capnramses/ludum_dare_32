@@ -39,6 +39,7 @@ function init () {
 	init_title ();
 	init_map ();
 	init_city_icons ();
+	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
 	
 	return true;
 }
