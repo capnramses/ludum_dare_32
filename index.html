@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>placeholder</title>
+</head>
+<!-- when loaded the javascript programme will start -->
+<body onload="main()">
+<canvas id="canvas" width="800" height="512"></canvas>
+</body>
+
+<!-- these special tags are just GLSL shader programmes to build
+the first one is a re-usable snippet to copy-paste into other shaders
+the second one is a proper programme with both vertex shader and fragment
+shader sections in one script
+-->
+<script id="snippet.glsl" type="text/glsl">
+//
+// A trivial function to #include from other files
+//
+float snippet (float a, float b) {
+	return a + b;
+}
+</script>
+
+<script id="map.glsl" type="text/glsl">
+//
+// a test shader to see if #include works
+//
+
+#vert // this part is the vertex shader.
+
+attribute vec2 vp;
+varying vec2 st;
+
+void main () {
+	st = vp * 0.5 + 0.5;
+	gl_Position = vec4 (vp, 0.0, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+
+varying vec2 st;
+uniform sampler2D dm;
+
+void main () {
+	gl_FragColor = texture2D (dm, st);
+}
+</script>
+
+<!-- javascript to include
+* general GL utilities to start the context etc.
+* code to load shaders and check compile logs etc.
+* some maths functions for matrices and vectors
+* main entry point to loops etc.
+ -->
+<script src="js/gl_utils.js" type="text/javascript"></script>
+<script src="js/apg_glsl.js" type="text/javascript"></script>
+<script src="js/map.js" type="text/javascript"></script>
+<script src="js/main.js" type="text/javascript"></script>
+</html>
