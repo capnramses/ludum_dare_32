@@ -55,8 +55,9 @@ function add_city_icon (name_str, world_x, world_z, team_num) {
 
 function init_city_icons () {
 	// texture
-	city_icon_tex = create_texture_from_file (city_icon_image);
-	city_icon_palette_tex = create_texture_from_file (city_icon_palette_image);
+	city_icon_tex = create_texture_from_file (city_icon_image, true);
+	city_icon_palette_tex = create_texture_from_file (city_icon_palette_image,
+		true);
 	// mesh
 	city_vao = vao_ext.createVertexArrayOES ();
 	vao_ext.bindVertexArrayOES (city_vao);

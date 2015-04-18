@@ -90,11 +90,11 @@ void main () {
 	vec3 nn = normalize (n);
 	vec3 fwd = normalize (vec3 (1.0, 1.0, -5.0));
 	
-	gl_FragColor.rgb = texel.rgb * dot (nn, fwd) + 0.2 * texel.rgb;
-	
 	// team colour
 	float pfac = (ptexel.x + ptexel.y + ptexel.z) * 0.33;
-	gl_FragColor.rgb = mix (gl_FragColor.rgb, team_col, pfac);
+	gl_FragColor.rgb = mix (texel.rgb, team_col, pfac);
+	
+	gl_FragColor.rgb = gl_FragColor.rgb * dot (nn, fwd) + 0.2 * gl_FragColor.rgb;
 	
 	gl_FragColor.a = texel.a;
 }
@@ -181,6 +181,8 @@ void main () {
 <script src="js/map.js" type="text/javascript"></script>
 <!-- render cities -->
 <script src="js/city_icon.js" type="text/javascript"></script>
+<!-- render cities -->
+<script src="js/agent_icons.js" type="text/javascript"></script>
 <!-- programme entry point -->
 <script src="js/main.js" type="text/javascript"></script>
 </html>

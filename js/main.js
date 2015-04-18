@@ -45,6 +45,7 @@ function init () {
 	init_title ();
 	init_map ();
 	init_city_icons ();
+	init_agent_icons ();
 	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
 	
 	return true;
@@ -65,6 +66,7 @@ function draw_frame () {
 			draw_map ();
 			// ignore any depth values written by map so always-on-top
 			draw_city_icons ();
+			draw_agent_icons ();
 			draw_texts ();
 			break;
 		default:
