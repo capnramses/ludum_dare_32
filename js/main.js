@@ -9,6 +9,9 @@ var time_step_accum_s = 0.0;
 // updates at 100Hz
 var time_step_size_s = 0.01;
 
+var font_img = "textures/freemono_inv.png"
+var font_meta = "fonts/freemono.meta"
+
 //
 // start context and start loading assets
 //
@@ -19,7 +22,8 @@ function init () {
 	var shader_prog_srcs = [
 		"map.glsl",
 		"city.glsl",
-		"title.glsl"
+		"title.glsl",
+		"font.glsl"
 	];
 	if (!load_shaders (shader_prog_srcs)) {
 		return false;
@@ -36,9 +40,12 @@ function init () {
 	gl.enableVertexAttribArray (0);
 	
 	init_cam ();
+	init_text_rendering (canvas.clientWidth, canvas.clientHeight);
+	load_font (font_img, font_meta);
 	init_title ();
 	init_map ();
 	init_city_icons ();
+	init_agent_icons ();
 	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
 	
 	return true;
@@ -59,12 +66,11 @@ function draw_frame () {
 			draw_map ();
 			// ignore any depth values written by map so always-on-top
 			draw_city_icons ();
+			draw_agent_icons ();
+			draw_texts ();
 			break;
 		default:
 	}
-	
-	// override depth buffer and always draw cities on top
-	//draw_city_icons ();
 	
 	cam_dirty = false;
 }
@@ -117,4 +123,14 @@ function main () {
 	// animate and do logic
 	previous_millis = (new Date).getTime ();
 	main_loop ();
+}
+
+//
+//
+//
+function get_string_from_URL (url) {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open ("GET", url, false);
+	xmlhttp.send ();
+	return xmlhttp.responseText;
 }

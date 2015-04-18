@@ -50,7 +50,7 @@ return window.requestAnimationFrame ||
 	};
 })();
 
-function create_texture_from_file (url) {
+function create_texture_from_file (url, linear, mipmaps) {
 	console.log ("loading image " + url + "...");
 	var texture = gl.createTexture();
 	var image = new Image();
@@ -61,9 +61,14 @@ function create_texture_from_file (url) {
 			image);
 		gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-		// no anti-aliasing
-		gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-		gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		// no anti-aliasing by default
+		if (linear) {
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		} else {
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		}
 		console.log ("texture loaded from " + url);
 	}
 	image.src = url;
