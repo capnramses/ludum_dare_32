@@ -32,6 +32,7 @@ function init_gl () {
 	gl.cullFace (gl.BACK);
 	gl.frontFace (gl.CCW);
 	gl.enable (gl.CULL_FACE);
+	gl.enable (gl.DEPTH_TEST);
 }
 
 /** FROM Google webgl-utils.js
@@ -67,4 +68,12 @@ function create_texture_from_file (url) {
 	}
 	image.src = url;
 	return texture;
+}
+
+function get_uniform_loc (sp, var_str) {
+	var loc = gl.getUniformLocation (sp, var_str);
+	if (loc < 0) {
+		console.error ("uniform variable not active: " + var_str);
+	}
+	return loc;
 }

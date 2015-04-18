@@ -139,6 +139,7 @@ function load_shaders_from_strings (vs_str, fs_str) {
 			gl.getProgramInfoLog (sp));
 		return null;
 	}
+	console.log ("shader prog created");
 	return sp;
 }
 
@@ -147,6 +148,7 @@ function load_shaders_from_strings (vs_str, fs_str) {
 //
 function load_shaders (shader_prog_srcs) {
 	for (var i = 0; i < shader_prog_srcs.length; i++) {
+		console.log ("loading shader: " + shader_prog_srcs[i]);
 		var str = extract_shader_str (shader_prog_srcs[i]);
 		var final_str = parse_glsl (str);
 		//alert (final_str);
