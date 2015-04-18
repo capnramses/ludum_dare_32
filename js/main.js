@@ -17,7 +17,9 @@ function init () {
 	
 	// actual programmes to build from embedded in tags on the index.html page
 	var shader_prog_srcs = [
-		"map.glsl"
+		"map.glsl",
+		"city.glsl",
+		"title.glsl"
 	];
 	if (!load_shaders (shader_prog_srcs)) {
 		return false;
@@ -33,8 +35,10 @@ function init () {
 	gl.vertexAttribPointer (0, 2, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray (0);
 	
+	init_cam ();
 	init_title ();
 	init_map ();
+	init_city_icons ();
 	
 	return true;
 }
@@ -43,7 +47,7 @@ function init () {
 // main drawing function
 //
 function draw_frame () {
-	gl.clear (gl.COLOR_BUFFER_BIT);
+	gl.clear (gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.viewport (0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight);
 	
 	switch (game_state) {
@@ -52,9 +56,16 @@ function draw_frame () {
 			break;
 		case "map":
 			draw_map ();
+			// ignore any depth values written by map so always-on-top
+			draw_city_icons ();
 			break;
 		default:
 	}
+	
+	// override depth buffer and always draw cities on top
+	//draw_city_icons ();
+	
+	cam_dirty = false;
 }
 
 //
