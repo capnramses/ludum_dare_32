@@ -13,6 +13,27 @@ var city_icons = [];
 var city_PV_loc;
 var city_M_loc;
 
+function add_city_icon (name_str, world_x, world_z) {
+	var font_px = 40.0;
+
+	var icon = new Object;
+	icon.name_str = name_str;
+	icon.x = world_x;
+	icon.y = 0.0;
+	icon.z = world_z;
+	icon.M = translate_mat4 (identity_mat4 (), [icon.x, icon.y, icon.z]);
+	city_icons.push (icon);
+
+	// convert city world coords to screen coords
+	var screen_pos = mult_mat4_vec4 (V, [world_x, 0.0, world_z, 1.0]);
+	screen_pos = mult_mat4_vec4 (P, screen_pos);
+	// perspective division
+	screen_pos[0] /= screen_pos[3];
+	screen_pos[1] /= screen_pos[3];
+	screen_pos[2] /= screen_pos[3];
+	add_text (name_str, screen_pos[0], screen_pos[1], font_px, 0.0, 1.0, 0.0, 1.0);
+}
+
 function init_city_icons () {
 	// texture
 	city_icon_tex = create_texture_from_file (city_icon_image);
@@ -35,24 +56,9 @@ function init_city_icons () {
 	gl.enableVertexAttribArray (2);
 
 	// dummy instances
-	var icon = new Object;
-	icon.x = 1.0;
-	icon.y = 0.0;
-	icon.z = 4.0;
-	icon.M = translate_mat4 (identity_mat4 (), [icon.x, icon.y, icon.z]);
-	city_icons.push (icon);
-	icon = new Object;
-	icon.x = 10.0;
-	icon.y = 0.0;
-	icon.z = 0.0;
-	icon.M = translate_mat4 (identity_mat4 (), [icon.x, icon.y, icon.z]);
-	city_icons.push (icon);
-	icon = new Object;
-	icon.x = -15.0;
-	icon.y = 0.0;
-	icon.z = -5.0;
-	icon.M = translate_mat4 (identity_mat4 (), [icon.x, icon.y, icon.z]);
-	city_icons.push (icon);
+	add_city_icon ("Cape Town", 0.0, 3.0);
+	add_city_icon ("Singapore", 10.0, 0.0);
+	add_city_icon ("Seattle", -15.0, -5.0);
 	
 	city_PV_loc = get_uniform_loc (shader_progs[1], "PV");
 	city_M_loc = get_uniform_loc (shader_progs[1], "M");
