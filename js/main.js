@@ -9,8 +9,8 @@ var time_step_accum_s = 0.0;
 // updates at 100Hz
 var time_step_size_s = 0.01;
 
-var font_img = "textures/freemono_inv.png"
-var font_meta = "fonts/freemono.meta"
+var font_img = "textures/abys.png"
+var font_meta = "fonts/abys.meta"
 
 //
 // start context and start loading assets
@@ -46,7 +46,7 @@ function init () {
 	init_map ();
 	init_city_icons ();
 	init_agent_icons ();
-	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
+//	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
 	
 	init_gui ();
 	
