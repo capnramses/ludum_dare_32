@@ -374,14 +374,14 @@ function game_graph(){
 		
 	if(!cities.hasOwnProperty(cityName)) {
 			console.log("Error in getCityNodes: city not found");
-			return c;	
+			return null;	
 		}
 		return cities[cityName].nodes;
 	};
 	graph.getCityEdges = function(cityName) {
 		if(!cities.hasOwnProperty(cityName)) {
 			console.log("Error in movgetCityEdgeseComedian: city not found");
-			return c;	
+			return null;	
 		}
 			return cities[cityName].edges;
 	}
