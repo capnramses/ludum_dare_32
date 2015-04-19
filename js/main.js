@@ -11,6 +11,9 @@ var tic_step_size = 1.0; // 1second per turn
 // updates at 100Hz
 var time_step_size_s = 0.01;
 
+var initial_enemy_pop = 0;
+var initial_player_pop = 0;
+
 var font_img = "textures/abys.png"
 var font_meta = "fonts/abys.meta"
 
@@ -97,6 +100,11 @@ function init () {
 	add_city_icon ("Moscow", 2.0, -7.0, 0);
 	add_city_icon ("Tokyo", 14.0, -5.0, 1);
 	
+	initial_enemy_pop = count_enemy_pop ();
+	console.log (initial_enemy_pop);
+	initial_player_pop = count_player_pop ();
+	console.log (initial_player_pop);
+	
 	/*-------------------------------------------------------------------------*/
 	
 	return true;
@@ -148,6 +156,7 @@ function update (elapsed) {
 			update_input ();
 			update_ai (elapsed);
 			update_city_stats ();
+			update_gui (elapsed);
 			//
 			// make tics in simulation
 			//

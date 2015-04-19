@@ -60,7 +60,7 @@ function update_input () {
 		// check if clicked on thing that was being hovered over
 		// if not enough points -- make BUR BUR sounds
 		// else KA_CHING sounds
-		var pts = 100;
+		var pts = player_score;
 	
 		// check for hover over arthur or heckler in gui
 		if (mouse_y_clip < -0.575 && mouse_y_clip >= -0.90) {
@@ -72,7 +72,7 @@ function update_input () {
 					if (mouse_is_down) {
 						has_arthur_in_hand = true;
 						var sound = new Howl ({urls: ['audio/cash.wav']}).play();
-						// TODO subtract points
+						player_score -= 100;
 					}
 					
 				} else {
@@ -86,7 +86,7 @@ function update_input () {
 					if (mouse_is_down) {
 						has_heckler_in_hand = true;
 						var sound = new Howl ({urls: ['audio/cash.wav']}).play();
-						// TODO subtract points
+						player_score -= 100;
 					}
 				} else {
 					gui_hover_heckler_red = true;
