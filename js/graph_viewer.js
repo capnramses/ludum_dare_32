@@ -86,7 +86,7 @@ var svg = d3.select("body").append("svg")
   return vis;
 }
 
-console.log("Starting grpah viewer executions");
+console.log("Starting graph viewer executions");
 
 var g =  new game_graph();
 g.addCity("Dublin",10,2,0.5);

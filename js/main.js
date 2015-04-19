@@ -17,6 +17,7 @@ var font_meta = "fonts/abys.meta"
 // GAME GRAPH (presume this needs to be a global)
 var g;
 var city_names = [];
+var vis; //visualisation of a citys population
 
 //
 // start context and start loading assets
@@ -79,6 +80,7 @@ function init () {
 	g.connectCities("Tokyo", "Moscow", 8);
 	g.connectCities("Sydney", "Delhi",2);
 	g.connectCities("Sydney", "New York",2);
+	visualiseCity("Moscow",g);
 	
 	city_names.push ("Dublin");
 	city_names.push ("Cape Town");
@@ -155,7 +157,7 @@ function update (elapsed) {
 				g.nextTurn();
 				
 				// TODO vis update colours here too?
-				
+				vis.upateColors();
 				tic_step_accum_s -= tic_step_size;
 			}
 			
