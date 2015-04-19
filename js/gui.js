@@ -20,7 +20,7 @@ var enemy_pop_text;
 function init_gui () {
 	var font_px = 40.0;
 	var font_voffset = font_px / canvas.clientHeight;
-	points_text = add_text ("$$ Bank Account $$: " + player_score, -0.9, -0.5,
+	points_text = add_text ("Bank Account: $" + player_score, -0.9, -0.5,
 		font_px, 1.0, 1.0, 1.0, 1.0);
 	player_pop_text = add_text ("Player Popu. ", 0.0, -0.5, font_px, 1.0, 1.0,
 		1.0, 1.0);
@@ -130,7 +130,7 @@ function update_gui (elapsed) {
 	while (time_accum_bank > 0.1) {
 		time_accum_bank -= 0.1;
 		player_score += 1;
-		update_text (points_text, "$$ Bank Account $$: " + player_score);
+		update_text (points_text, "Bank Account: $" + player_score);
 	}
 	
 	var enemy_pop = ((count_enemy_pop () / initial_enemy_pop) *
