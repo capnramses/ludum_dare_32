@@ -370,6 +370,22 @@ function game_graph(){
 			hecklers.push(heckler);
 		return heckler;
 	}	
+	graph.getCityNodes = function(cityName) {
+		
+	if(!cities.hasOwnProperty(cityName)) {
+			console.log("Error in getCityNodes: city not found");
+			return null;	
+		}
+		return cities[cityName].nodes;
+	};
+	graph.getCityEdges = function(cityName) {
+		if(!cities.hasOwnProperty(cityName)) {
+			console.log("Error in movgetCityEdgeseComedian: city not found");
+			return null;	
+		}
+			return cities[cityName].edges;
+	}
+	
 	return graph;	
 
 }
