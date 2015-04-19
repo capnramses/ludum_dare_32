@@ -54,6 +54,12 @@ function add_city_icon (name_str, world_x, world_z, team_num) {
 	screen_pos[1] /= screen_pos[3];
 	screen_pos[2] /= screen_pos[3];
 	add_text (name_str, screen_pos[0], screen_pos[1], font_px, 1.0, 1.0, 1.0, 1.0);
+	
+	if (team_num == 0) {
+		ai_city_indices.push (city_icons.length - 1);
+	} else {
+		player_city_indices.push (city_icons.length - 1);
+	}
 }
 
 function init_city_icons () {

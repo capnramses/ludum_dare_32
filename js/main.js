@@ -98,8 +98,6 @@ function init () {
 	add_city_icon ("Tokyo", 14.0, -5.0, 1);
 	
 	/*-------------------------------------------------------------------------*/
-	add_comedian_to_city (0, 0);
-	add_heckler_to_city (0, 1);
 	
 	return true;
 }
@@ -148,7 +146,7 @@ function update (elapsed) {
 		case "map":
 		
 			update_input ();
-		
+			update_ai (elapsed);
 			//
 			// make tics in simulation
 			//
