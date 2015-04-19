@@ -27,6 +27,12 @@ function update_input () {
 			// gfx AND logic
 			has_arthur_in_hand = false;
 			add_comedian_to_city (1, highlight_city);
+			
+			var city_name = city_names[highlight_city];
+			console.log ("attempting to place comedian in " + city_name);
+			g.deployComedian ("Dylan Moran", city_name, 1.0, "stand-up");
+			//g.deployComedian ("Tim Minchin","Sydney", 1.0, "stand-up");
+			
 			var sound = new Howl ({urls: ['audio/arthur.wav']}).play();
 			highlight_city = -1;
 			// TODO
@@ -39,6 +45,11 @@ function update_input () {
 		if (mouse_is_down && highlight_city > -1) {
 			has_heckler_in_hand = false;
 			add_heckler_to_city (1, highlight_city);
+			
+			var city_name = city_names[highlight_city];
+			console.log ("attempting to place heckler in " + city_name);
+			g.deployHeckler ("Dad1", city_name)
+			
 			var sound = new Howl ({urls: ['audio/heckler.wav']}).play();
 			highlight_city = -1;
 			// TODO
@@ -52,9 +63,9 @@ function update_input () {
 		var pts = 100;
 	
 		// check for hover over arthur or heckler in gui
-		if (mouse_y_clip < -0.60 && mouse_y_clip >= -0.86) {
+		if (mouse_y_clip < -0.575 && mouse_y_clip >= -0.90) {
 			// hover hire arthur
-			if (mouse_x_clip > -0.55 && mouse_x_clip <= -0.45) {
+			if (mouse_x_clip > -0.575 && mouse_x_clip <= -0.425) {
 				if (pts >= 100) {
 					gui_hover_arthur_green = true;
 					
@@ -69,7 +80,7 @@ function update_input () {
 				}
 				
 			// hover hire heckler
-			} else if (mouse_x_clip > 0.29 && mouse_x_clip <= 0.41) {
+			} else if (mouse_x_clip > 0.27 && mouse_x_clip <= 0.44) {
 				if (pts >= 100) {
 					gui_hover_heckler_green = true;
 					if (mouse_is_down) {
@@ -87,6 +98,9 @@ function update_input () {
 		
 		// or in world map
 		// if so colour in green or sthng
+		
+		// select city
+		highlight_city = get_closest_city_to (mouse_x_clip, mouse_y_clip, 0.1, -1);
 		
 		// 1. if mouse is in gui area check if close to heckler or arthur
 		

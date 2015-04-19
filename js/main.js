@@ -6,11 +6,17 @@ var quad_vao;
 // timers in seconds used for working out time steps
 var previous_millis;
 var time_step_accum_s = 0.0;
+var tic_step_accum_s = 0.0;
+var tic_step_size = 1.0; // 1second per turn
 // updates at 100Hz
 var time_step_size_s = 0.01;
 
 var font_img = "textures/abys.png"
 var font_meta = "fonts/abys.meta"
+
+// GAME GRAPH (presume this needs to be a global)
+var g;
+var city_names = [];
 
 //
 // start context and start loading assets
@@ -50,8 +56,50 @@ function init () {
 	
 	init_gui ();
 	
-	add_comedian_to_city (0, 1);
-	add_heckler_to_city (0, 0);
+	/*-------------------------------------------------------------------------*/
+	// START GRAPHIING LOGIC
+	//
+	console.log("Starting grpah viewer executions");
+
+	g = new game_graph();
+	g.addCity("Dublin",10,2,0.5);
+	g.addCity("Cape Town",100,4,0.1);
+	g.addCity("New York", 150, 2, 0.1);
+	g.addCity("Rio de Janeiro", 200, 4, 0.4);
+	g.addCity("Delhi", 300, 8, 1.0);
+	g.addCity("Sydney", 50, 3, 0.4);
+	g.addCity("Moscow", 120, 4, 0.13);
+	g.addCity("Tokyo", 160, 10, 0.05);
+
+	g.connectCities("Cape Town", "Rio de Janeiro", 10);
+	g.connectCities("Dublin", "Cape Town", 1);
+	g.connectCities("Cape Town", "New York", 5);
+	g.connectCities("Moscow", "Delhi", 1);
+	g.connectCities("Tokyo", "Delhi", 4);
+	g.connectCities("Tokyo", "Moscow", 8);
+	g.connectCities("Sydney", "Delhi",2);
+	g.connectCities("Sydney", "New York",2);
+	
+	city_names.push ("Dublin");
+	city_names.push ("Cape Town");
+	city_names.push ("New York");
+	city_names.push ("Rio de Janeiro");
+	city_names.push ("Delhi");
+	city_names.push ("Sydney");
+	city_names.push ("Moscow");
+	city_names.push ("Tokyo");
+	add_city_icon ("Dublin", -3.0, -7.0, 1);
+	add_city_icon ("Cape Town", 1.0, 4.0, 0);
+	add_city_icon ("New York", -11.0, -5.0, 0);
+	add_city_icon ("Rio de Janeiro", -7.5, 2.5, 1);
+	add_city_icon ("Delhi", 7.5, -3.0, 0);
+	add_city_icon ("Sydney", 16.0, 4.0, 1);
+	add_city_icon ("Moscow", 2.0, -7.0, 0);
+	add_city_icon ("Tokyo", 14.0, -5.0, 1);
+	
+	/*-------------------------------------------------------------------------*/
+	add_comedian_to_city (0, 0);
+	add_heckler_to_city (0, 1);
 	
 	return true;
 }
@@ -89,6 +137,8 @@ function draw_frame () {
 // main time-step based logic update function
 //
 function update (elapsed) {
+	tic_step_accum_s += elapsed;
+
 	switch (game_state) {
 		case "title":
 		
@@ -100,8 +150,15 @@ function update (elapsed) {
 			update_input ();
 		
 			//
-			// do stuff here
+			// make tics in simulation
 			//
+			while (tic_step_accum_s > tic_step_size) {
+				g.nextTurn();
+				
+				// TODO vis update colours here too?
+				
+				tic_step_accum_s -= tic_step_size;
+			}
 			
 			break;
 		default:

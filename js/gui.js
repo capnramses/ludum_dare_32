@@ -2,6 +2,7 @@ var player_score = 0;
 
 // special camera to look at 3d models to hire
 var gui_V;
+var gui_P;
 var gui_PV;
 var gui_arthur_PV;
 var gui_heckler_PV;
@@ -20,7 +21,9 @@ function init_gui () {
 	add_text ("HIRE HECKLER:\n    (100pts)", 0.0, -0.7, font_px, 1.0, 1.0, 1.0, 1.0);
 	
 	gui_V = look_at ([0.0, 0.5, 5.0], [0.0, 0.5, 0.0], [0.0, 1.0, 0.0]);
-	gui_PV = mult_mat4_mat4 (P, gui_V);
+	var aspect = canvas.clientWidth / canvas.clientHeight;
+	gui_P = perspective (60.0, aspect, 0.1, 100.0);
+	gui_PV = mult_mat4_mat4 (gui_P, gui_V);
 	gui_arthur_PV = translate_mat4 (gui_PV, [-0.5, -0.7, 0.0]);
 	gui_heckler_PV = translate_mat4 (gui_PV, [0.35, -0.7, 0.0]);
 }

@@ -79,11 +79,6 @@ function init_city_icons () {
 		gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray (2);
 
-	// dummy instances
-	add_city_icon ("Cape Town", 1.0, 4.0, 0);
-	add_city_icon ("Singapore", 10.0, 0.0, 1);
-	add_city_icon ("Seattle", -15.0, -5.0, 1);
-	
 	city_PV_loc = get_uniform_loc (shader_progs[1], "PV");
 	city_M_loc = get_uniform_loc (shader_progs[1], "M");
 	city_palette_loc = get_uniform_loc (shader_progs[1], "palette");
@@ -132,8 +127,10 @@ function draw_city_icons () {
 function get_closest_city_to (x_clip, y_clip, range, team) {
 	var n = city_icons.length;
 	for (var i = 0; i < n; i++) {
-		if (team != city_icons[i].team_num) {
-			continue;
+		if (team > -1) {
+			if (team != city_icons[i].team_num) {
+				continue;
+			}
 		}
 		var wp = [city_icons[i].x, 0.0, city_icons[i].z, 1.0];
 		var cs = mult_mat4_vec4 (PV, wp);
