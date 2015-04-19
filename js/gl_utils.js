@@ -7,6 +7,10 @@ var gl;
 // simplifies rendering code in modern GL standard
 var vao_ext;
 
+var mouse_is_down = false;
+var mouse_canvas_x;
+var mouse_canvas_y;
+
 //
 // check if an extension exists in the browser
 // if not, writes an error message to web element with id given
@@ -26,6 +30,43 @@ function check_ext (name) {
 //
 function init_gl () {
 	canvas = document.getElementById ("canvas");
+	
+	canvas.onmousedown = function (ev) {
+		mouse_is_down = true;
+		//console.log ("mouse down at " + mouse_canvas_x + ", " + mouse_canvas_y);
+	}
+	
+	document.onmouseup = function (ev) {
+		mouse_is_down = false;
+	}
+	
+	canvas.onmousemove = function (ev) {
+		// recursively get location within parent(s)
+		var element = canvas;
+		var top = 0;
+		var left = 0;
+		while (element && element.tagName != 'BODY') {
+			top += element.offsetTop;
+			left += element.offsetLeft;
+			element = element.offsetParent;
+		}
+		// adjust for scrolling
+		left += window.pageXOffset;
+		top -= window.pageYOffset;
+		var x = ev.clientX - left;
+		var y = (ev.clientY - top);
+		// sometimes range is a few pixels too big
+		if (x < 0 || x >= canvas.clientWidth - 1) {
+			return;
+		}
+		if (y < 0 || y >= canvas.clinetHeight - 1) {
+			return;
+		}
+		mouse_canvas_x = x;
+		mouse_canvas_y = y;
+		//console.log (mouse_canvas_x + ", " + mouse_canvas_y);
+	}
+	
 	gl = canvas.getContext ("webgl");
 	vao_ext = check_ext ("OES_vertex_array_object");
 	gl.clearColor (0.2, 0.2, 0.2, 1.0);

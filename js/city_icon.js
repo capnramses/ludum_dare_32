@@ -24,6 +24,8 @@ var city_PV_loc;
 var city_M_loc;
 var city_palette_loc;
 var city_team_col_loc;
+var city_highlight_loc;
+var highlight_city = -1;
 
 //
 // name of city and
@@ -41,6 +43,7 @@ function add_city_icon (name_str, world_x, world_z, team_num) {
 	icon.z = world_z;
 	icon.M = translate_mat4 (identity_mat4 (), [icon.x, icon.y, icon.z]);
 	icon.team_num = team_num;
+	icon.num_agents = 0;
 	city_icons.push (icon);
 
 	// convert city world coords to screen coords
@@ -85,6 +88,7 @@ function init_city_icons () {
 	city_M_loc = get_uniform_loc (shader_progs[1], "M");
 	city_palette_loc = get_uniform_loc (shader_progs[1], "palette");
 	city_team_col_loc = get_uniform_loc (shader_progs[1], "team_col");
+	city_highlight_loc = get_uniform_loc (shader_progs[1], "highlight");
 	
 	gl.useProgram (shader_progs[1]);
 	gl.uniformMatrix4fv (city_PV_loc, gl.FALSE, new Float32Array (PV));
@@ -105,6 +109,12 @@ function draw_city_icons () {
 
 	var n = city_icons.length;
 	for (var i = 0; i < n; i++) {
+		if (highlight_city == i) {
+			gl.uniform3f (city_highlight_loc, 0.0, 1.0, 0.0);
+		} else {
+			gl.uniform3f (city_highlight_loc, 0.0, 0.0, 0.0);
+		}
+	
 		gl.uniformMatrix4fv (city_M_loc, gl.FALSE,
 			new Float32Array (city_icons[i].M));
 		if (city_icons[i].team_num == 0) {
@@ -117,4 +127,26 @@ function draw_city_icons () {
 		vao_ext.bindVertexArrayOES (city_vao);
 		gl.drawArrays (gl.TRIANGLES, 0, city_pc);
 	}
+}
+
+function get_closest_city_to (x_clip, y_clip, range, team) {
+	var n = city_icons.length;
+	for (var i = 0; i < n; i++) {
+		if (team != city_icons[i].team_num) {
+			continue;
+		}
+		var wp = [city_icons[i].x, 0.0, city_icons[i].z, 1.0];
+		var cs = mult_mat4_vec4 (PV, wp);
+		var nds = [cs[0] / cs[3], cs[1] / cs[3], cs[2] / cs[3]];
+		
+		var x_r = x_clip - nds[0];
+		var y_r = y_clip - nds[1];
+		var dsq = x_r * x_r + y_r * y_r;
+		//console.log (i + " " + x_r + " " + y_r);
+		
+		if (dsq < range * range) {
+			return i;
+		}
+	}
+	return -1;
 }
