@@ -26,6 +26,7 @@ var city_palette_loc;
 var city_team_col_loc;
 var city_highlight_loc;
 var highlight_city = -1;
+var city_texts = [];
 
 //
 // name of city and
@@ -53,7 +54,9 @@ function add_city_icon (name_str, world_x, world_z, team_num) {
 	screen_pos[0] /= screen_pos[3];
 	screen_pos[1] /= screen_pos[3];
 	screen_pos[2] /= screen_pos[3];
-	add_text (name_str, screen_pos[0], screen_pos[1], font_px, 1.0, 1.0, 1.0, 1.0);
+	var text_id = add_text (name_str, screen_pos[0], screen_pos[1], font_px,
+		1.0, 1.0, 1.0, 1.0);
+	city_texts.push (text_id);
 	
 	if (team_num == 0) {
 		ai_city_indices.push (city_icons.length - 1);
@@ -152,4 +155,14 @@ function get_closest_city_to (x_clip, y_clip, range, team) {
 		}
 	}
 	return -1;
+}
+
+function update_city_stats () {
+	var n = city_names.length;
+	for (var i = 0; i < n; i++) {
+		var name = city_names[i];
+		var stats = g.getCityStats (name);
+		var popu = stats.population;
+		update_text (city_texts[i], name + "\npopu. " + popu);
+	}
 }

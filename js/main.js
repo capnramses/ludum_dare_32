@@ -147,6 +147,7 @@ function update (elapsed) {
 		
 			update_input ();
 			update_ai (elapsed);
+			update_city_stats ();
 			//
 			// make tics in simulation
 			//
