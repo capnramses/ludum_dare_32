@@ -48,13 +48,15 @@ var svg = d3.select("body").append("svg")
       .style("fill", function(d) { 
     	  if(d.status == "alive") {
     		  return color(d.colorIndex);
+    	  }else if(d.status == "immune") {
+    		  return "pink";
     	  }
     	  return "black"    	  
       })
       .call(force.drag);
 
   node.append("title")
-      .text(function(d) { return d.id; });
+      .text(function(d) { return d.id + "_"+d.status; });
 
   force.on("tick", function() {
     link.attr("x1", function(d) { return d.source.x; })
@@ -74,7 +76,9 @@ var svg = d3.select("body").append("svg")
             .style("fill", function(d) { 
 			  	  if(d.status == "alive") {
 			  		  return color(d.colorIndex);
-			  	  }
+			  	  } else if(d.status == "immune") {
+		    		  return "pink";
+		    	  }
 			  	  return "black";    	  
             })
 	}
@@ -106,6 +110,7 @@ g.connectCities("Sydney", "New York",2);
 
 g.deployComedian("Dylan Moran","Dublin", 1.0, "stand-up");
 g.deployComedian("Tim Minchin","Sydney", 1.0, "stand-up");
+g.deployHeckler("Dad1", "Sydney")
  var nodes = g.nodes();
 var edges = g.edges();
 var v = new graphViewer(nodes,edges);

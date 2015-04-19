@@ -8,12 +8,13 @@ function game_graph(){
 	var edgeMap = {}; // store a key based on end node ids to see if edge alread exists. ends are always in alphabetical orer
 	var cities = {};
 	var comedians = [];
+	var comediansMap = {};// used to quickly access comedian by name
 	var hecklers = [];
 	
 	
 // global vlaues of the class
 	var JOKE_THRESHOLD = 0.9 // joke must score mopre than this to land  
-	var INTER_CITY_COEFFICIENT = 0.92;//  the hitthe joke will take when trying to onfect somebody in another city 
+	var INTER_CITY_COEFFICIENT = 0.915;//  the hitthe joke will take when trying to onfect somebody in another city 
 	
 	function getEdgeMapKey (node1, node2) {
 		var edgeMapKey = node1.id + "_" + node2.id;
@@ -91,9 +92,12 @@ function game_graph(){
 		cities[name] =  {nodes:[],
 						 edges:[],
 		                 stats:{population:size,
-								victims:0, 
-								humourLevel: 
-								humourLevel||1.0} // set humour level to 1 if none supplied
+								victims:0,
+								immune: 0,
+								originalPopulation:size,
+								humourLevel: humourLevel||1.0,
+								connectivity: edgeRatio,
+								randomness: rewireCoefficient} // set humour level to 1 if none supplied
 		};
 		
 		for( var i = 0; i <  size; i++) {
@@ -121,17 +125,14 @@ function game_graph(){
 		cities[name].edges.forEach(function(e, index){
 			//		get a radom number between 0 and 1 if the number is less 
 			//		then the wiring coefficent rewire itherwise don''t
-			
-		
+				
 				// Only rewire within the same cluster
 				var randomNum = Math.random();
 				if (randomNum < rewireCoefficient) {
-					// reset the target of the edge at random
-					
+					// reset the target of the edge at random					
 					// choose  another endnode arandom 
 					// but not the source as we will have no edge loops
-			
-					
+								
 					var newTarget = e.source;
 					
 					while(newTarget == e.source) {
@@ -196,12 +197,20 @@ function game_graph(){
 		if(!cities.hasOwnProperty(cityName)) {
 			console.log( "Error invlaid city for comedian!");
 		}		
-		comedian.node =cities[cityName].nodes[ Math.floor(Math.random() * cities[cityName].nodes.length) ] ;	
+		var alivePopulation = [];
+		cities[cityName].nodes.forEach(function(n){
+			if(n.status == "alive") {
+				alivePopulation.push(n);
+			}			
+		});
+		// set the comedian new city and deploy him to a node at random in that city
+		comedian.node = alivePopulation[Math.floor(Math.random() * alivePopulation.length)] ;	
 		comedian.node.status = "dead";
 		// the audience is the ist of all poitential victioms.... i .e. neighbours of beople who have already beenkilled by the comedian
 		comedian.audience = comedian.node.neighbours;
-		comedian.cityName = cityName;
+		comedian.city = cityName;
 		comedians.push(comedian);
+		comediansMap[name] = comedian;
 		
 		comedian.tellJoke = function() {
 			// tellin a joke has a success rate based on the comedian quality, the humour of a city
@@ -217,18 +226,16 @@ function game_graph(){
 				console.log("Comedian "  + this.name +" has no audience");
 				return;
 				}
-			
 			console.log("Comedian "  + this.name +" is telling a  joke");
-			
-			
 			me.audience.forEach(function(n) {	
 				// first make sure that the perosn has not been killed by another comedians joke
+				// or is not immune
 				if ( n.status ==  "alive") {
 					// check if joke lands
 					// a score of JOKE_THRESHOLD or higher means ther joke landed
 					// check if joke does lands
 					var baseScore = Math.random();
-					var targetCityHumour = cities[me.cityName].stats.humourLevel;
+					var targetCityHumour = cities[me.city].stats.humourLevel;
 					var interCityModifier = 1.0;
 					if(me.node.city !=  n.city) {
 						interCityModifier = INTER_CITY_COEFFICIENT;
@@ -239,6 +246,7 @@ function game_graph(){
 						// we have a hit 
 						n.status = "dead";
 						hits++;
+						comedian.kills++;
 						cities[cityName].stats.victims++;
 						cities[cityName].stats.population--;
 						// person is dead
@@ -255,7 +263,6 @@ function game_graph(){
 					}
 				}			
 			}); //end this.audience.forEach
-			
 			// new Audience may have duplicate  so need to clean it up
 			var oldAudienceSize = me.audience.length;
 			me.audience = removeDuplicateNodes(newAudience)
@@ -263,17 +270,97 @@ function game_graph(){
 			console.log("Hits:" + hits + "   Misses:" + misses + "    audience members:" +  me.audience.length  );
 			
 		}; // end telljoke
-		return comedian;
-		
+		return comedian;		
 	};	
 	
 	graph.nextTurn = function() {
+		hecklers.forEach(function(h) {
+			h.move();
+		});	
 		comedians.forEach (function(c) {
 			c.tellJoke();
 		});	
+	};
+	
+	graph.getCityStats = function(cityName) {
+		if(!cities.hasOwnProperty(cityName)) {
+			console.log("Error in getCityStats: city not found");
+			return null;	
+		}
+			return   cities[cityName].stats;
 	}
-	
-	
+		
+	graph.moveComedian= function(comedianName, newCity) {
+		// returns the update comedian value  or null if comedian is not found
+		// find the commedian	
+		if(!comdedians.hasOwnProperty("comedianName")) {
+			console.log("Error in moveCOmedian: comedian not found");
+			return null ;			
+		};
+		var c = comediansMap[c];
+		if(!cities.hasOwnProperty(cityName)) {
+			console.log("Error in moveComedian: city not found");
+			return c;	
+		}
+		var city = cities[newCity];
+		if(city.stats.population < 3) {
+			console.log("Error in moveComedian: Target city does not have enough population");
+			return c;
+		}
+				//need to find all living ndoes in the city
+		var alivePopulation = [];
+		city.nodes.forEach(function(n) {
+			if(n.status == "alive") {
+				alivePopulation.push(n);
+			}			
+		});
+		// set the comedian new city and deploy him to a node at random in that city
+		comedian.node = alivePopulation[Math.floor(Math.random() * alivePopulation.length)] ;	
+		c.city = newCity;
+		return c;
+	}
+		
+	graph.deployHeckler = function(name,cityName) {
+		// heckler simply does a roandom walk in a city.... marking people as immune
+		var heckler = {};
+		heckler.name = name;
+		heckler.city = cityName;
+		var alivePopulation = [];
+		cities[cityName].nodes.forEach(function(n){
+			if(n.status == "alive") {
+				alivePopulation.push(n);
+			}			
+		});
+		// set the comedian new city and deploy him to a node at random in that city
+		heckler.node = alivePopulation[Math.floor(Math.random() * alivePopulation.length)] ;	
+		heckler.node.status = "immune";
+		heckler.move = function() {
+			var neighbours = heckler.node.neighbours;
+			var aliveNeighbours = [];
+			var immuneNeighbours = []; // keep track of immune neighbours in case there are no alive ones
+			neighbours.forEach(function(n) {
+				if(n.city == heckler.city){
+					if (n.status == "alive") {
+						aliveNeighbours.push(n);
+					}else if (n.status == "immune") {
+						immuneNeighbours.push(n);
+					}	
+				}
+			});
+			
+			if(aliveNeighbours.length > 0){
+				heckler.node = aliveNeighbours[Math.floor(Math.random() * aliveNeighbours.length)] ;	
+			}else if (immuneNeighbours.length > 0) {
+				heckler.node = immuneNeighbours[Math.floor(Math.random() * immuneNeighbours.length)] ;	
+			}else {
+				console.log("Warning: hecklerhas no neioghbours and is stuck")
+			}
+			heckler.node.status = "immune";
+			console.log("Heckler " + heckler.name + " is at node " + heckler.node.id)
+		}		
+			hecklers.push(heckler);
+		return heckler;
+	}	
 	return graph;	
 
 }
