@@ -162,7 +162,8 @@ function update_city_stats () {
 	for (var i = 0; i < n; i++) {
 		var name = city_names[i];
 		var stats = g.getCityStats (name);
-		var popu = stats.population;
-		update_text (city_texts[i], name + "\npopu. " + popu);
+		update_text (city_texts[i], name + "\npopu. " + stats.population +
+			"\nvictims: " + stats.victims);
+		// can also put  + "\nhumour " + stats.humourLevel
 	}
 }
