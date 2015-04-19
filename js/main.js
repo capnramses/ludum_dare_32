@@ -55,7 +55,7 @@ function init () {
 	init_map ();
 	init_city_icons ();
 	init_agent_icons ();
-//	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
+	var sound = new Howl ({urls: ['audio/epic.ogg']}).play();
 	
 	init_gui ();
 	
