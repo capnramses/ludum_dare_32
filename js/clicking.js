@@ -1,6 +1,6 @@
 // the currently selected city's name, or "none"
 var selected_city_name = "none";
-
+var previous_selected_city_name = "none"
 var has_arthur_in_hand = false;
 var has_heckler_in_hand = false;
 var mouse_x_clip;
@@ -25,6 +25,7 @@ function update_input () {
 		// check for closest enemy city. if within radius highlight it
 		highlight_city = get_closest_city_to (mouse_x_clip, mouse_y_clip, 0.1, 0);
 		if (highlight_city > -1) {
+			
 			selected_city_name = city_names[highlight_city];
 		} else {
 			selected_city_name = "none";
@@ -115,8 +116,14 @@ function update_input () {
 		// select city
 		highlight_city = get_closest_city_to (mouse_x_clip, mouse_y_clip, 0.1, -1);
 		if (highlight_city > -1) {
+			previous_selected_city_name = selected_city_name;
 			selected_city_name = city_names[highlight_city];
+			if(previous_selected_city_name != selected_city_name ){
+				console.log(" highlighting " + selected_city_name) 
+				vis = visualiseCity(selected_city_name,g); 
+			}
 		} else {
+			previous_selected_city_name = selected_city_name
 			selected_city_name = "none";
 		}
 		

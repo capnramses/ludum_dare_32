@@ -74,6 +74,14 @@ function init () {
 	g.addCity("Sydney", 50, 3, 0.4);
 	g.addCity("Moscow", 120, 4, 0.13);
 	g.addCity("Tokyo", 160, 10, 0.05);
+	positionCityNodes("Dublin", g);
+	positionCityNodes("Cape Town", g);
+	positionCityNodes("New York", g);
+	positionCityNodes("Rio de Janeiro", g);
+	positionCityNodes("Delhi", g);
+	positionCityNodes("Sydney", g);
+	positionCityNodes("Moscow", g);
+	positionCityNodes("Tokyo", g);
 
 	g.connectCities("Cape Town", "Rio de Janeiro", 10);
 	g.connectCities("Dublin", "Cape Town", 1);
@@ -83,7 +91,7 @@ function init () {
 	g.connectCities("Tokyo", "Moscow", 8);
 	g.connectCities("Sydney", "Delhi",2);
 	g.connectCities("Sydney", "New York",2);
-	visualiseCity("Moscow",g);
+
 	
 	city_names.push ("Dublin");
 	city_names.push ("Cape Town");
@@ -166,7 +174,10 @@ function update (elapsed) {
 				g.nextTurn();
 				
 				// TODO vis update colours here too?
-				vis.upateColors();
+				if(vis) {
+					vis.upateColors();
+				}
+				
 				tic_step_accum_s -= tic_step_size;
 			}
 			
@@ -205,8 +216,6 @@ function main () {
 	previous_millis = (new Date).getTime ();
 	main_loop ();
 }
-
-//
 //
 //
 function get_string_from_URL (url) {

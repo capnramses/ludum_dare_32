@@ -51,9 +51,9 @@ vis = this;
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
     
-
-  node.append("title")
-      .text(function(d) { return d.id + "_"+d.status; });
+//
+//  node.append("title")
+//      .text(function(d) { return d.id + "_"+d.status; });
 
 	vis.upateColors =  function() {
 		svg.selectAll(".node")
@@ -71,8 +71,42 @@ vis = this;
   return vis;
 }
 
+function positionCityNodes(cityName, gameGraph) {
+	var svg = d3.select("#cityView");
+	var cityNodes = gameGraph.getCityNodes(cityName);
+	var cityEdges = gameGraph.getCityEdges(cityName);
+	if(!cityNodes) {
+		console.log("Error in visualiseCity  no city nodes found for " +  cityName);
+		return null;
+	}
+	
+	
+		var width = parseInt(svg.attr("width")),
+		    height = parseInt(svg.attr("height")) ;		    
+	    var force = d3.layout.force()
+	      .charge(-30)
+	      .linkDistance(10)
+	      .size([width, height]);	
+	    var layoutIterations = 200;
+	   
+	    force.nodes(cityNodes)
+	      .links(cityEdges);	   
+	    force.start();
+	    for (var i = layoutIterations; i > 0; --i) force.tick();
+	    force.stop();
+	
+};
 
 function  visualiseCity(cityName, gameGraph) {
+	console.log("visualising city: " + cityName);
+	var svg = d3.select("#cityView");
+	svg.selectAll(".node").remove();
+	svg.selectAll(".link").remove();
+	
+	if(cityName != "none") {
+		
+	
+	
 	var cityNodes = gameGraph.getCityNodes(cityName);
 	var cityEdges = gameGraph.getCityEdges(cityName);
 	if(!cityNodes) {
@@ -81,25 +115,15 @@ function  visualiseCity(cityName, gameGraph) {
 	}
 	
 	if(cityNodes[0].x == null) {
-		var svg = d3.select("#cityView");
-		var width = parseInt(svg.attr("width")),
-		    height = parseInt(svg.attr("height")) ;		    
-	    var force = d3.layout.force()
-	      .charge(-30)
-	      .linkDistance(10)
-	      .size([width, height]);	
-	    var layoutIterations = d3.min([cityNodes.length * cityNodes.length, 1000000]);
-	   
-	    force.nodes(cityNodes)
-	      .links(cityEdges);	   
-	    force.start();
-	    for (var i = layoutIterations; i > 0; --i) force.tick();
-	    force.stop();
+		positionCityNodes(cityName, gameGraph)
+		
 	}
 	var vis = cityViewer(cityNodes, cityEdges);
 	
 	return vis;
-    
+	} 
+	return null;
+	
 }
 
 
