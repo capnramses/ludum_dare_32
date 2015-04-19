@@ -24,6 +24,7 @@ var agent_PV_loc;
 var agent_M_loc;
 var agent_palette_loc;
 var agent_team_col_loc;
+var agent_highlight_loc;
 
 //
 // east/west pos on map between -20 (left) and +20 (right)
@@ -113,6 +114,7 @@ function init_agent_icons () {
 	agent_M_loc = get_uniform_loc (shader_progs[1], "M");
 	agent_palette_loc = get_uniform_loc (shader_progs[1], "palette");
 	agent_team_col_loc = get_uniform_loc (shader_progs[1], "team_col");
+	agent_highlight_loc = get_uniform_loc (shader_progs[1], "highlight");
 	
 	//gl.useProgram (shader_progs[1]);
 	//gl.uniformMatrix4fv (city_PV_loc, gl.FALSE, new Float32Array (PV));
@@ -125,12 +127,13 @@ function draw_agent_icons () {
 	if (cam_dirty) {
 		gl.uniformMatrix4fv (agent_PV_loc, gl.FALSE, new Float32Array (PV));
 	}
+	gl.uniform3f (agent_highlight_loc, 0.0, 0.0, 0.0);
 	
 	gl.activeTexture (gl.TEXTURE0);
 	gl.bindTexture (gl.TEXTURE_2D, arthur_icon_tex);
 	gl.activeTexture (gl.TEXTURE1);
 	gl.bindTexture (gl.TEXTURE_2D, arthur_icon_palette_tex);
-
+	
 	var n = arthur_icons.length;
 	for (var i = 0; i < n; i++) {
 		gl.uniformMatrix4fv (agent_M_loc, gl.FALSE,
@@ -165,4 +168,30 @@ function draw_agent_icons () {
 		vao_ext.bindVertexArrayOES (heckler_vao);
 		gl.drawArrays (gl.TRIANGLES, 0, heckler_pc);
 	}
+}
+
+function add_comedian_to_city (agent_team, city_num) {
+	var n = city_icons[city_num].num_agents;
+	var degs_per_agent = 38.0;
+	var our_deg = degs_per_agent * n;
+	var offset_vec = [0.0, 0.0, -2.0, 1.0];
+	var R = rotate_y_deg (identity_mat4 (), our_deg);
+	var rotated_vec = mult_mat4_vec4 (R, offset_vec);
+	var city_pos = [city_icons[city_num].x, 0.0, city_icons[city_num].z];
+	var wp = add_vec3_vec3 (rotated_vec, city_pos);
+	add_comedian_icon (wp[0], wp[2], agent_team);
+	city_icons[city_num].num_agents++;
+}
+
+function add_heckler_to_city (agent_team, city_num) {
+	var n = city_icons[city_num].num_agents;
+	var degs_per_agent = 38.0;
+	var our_deg = degs_per_agent * n;
+	var offset_vec = [0.0, 0.0, -2.0, 1.0];
+	var R = rotate_y_deg (identity_mat4 (), our_deg);
+	var rotated_vec = mult_mat4_vec4 (R, offset_vec);
+	var city_pos = [city_icons[city_num].x, 0.0, city_icons[city_num].z];
+	var wp = add_vec3_vec3 (rotated_vec, city_pos);
+	add_heckler_icon (wp[0], wp[2], agent_team);
+	city_icons[city_num].num_agents++;
 }

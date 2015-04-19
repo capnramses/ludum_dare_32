@@ -94,8 +94,12 @@ function update (elapsed) {
 			break;
 		case "map":
 		
-			// do stuff
+			update_input ();
 		
+			//
+			// do stuff here
+			//
+			
 			break;
 		default:
 	}
