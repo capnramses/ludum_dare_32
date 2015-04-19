@@ -203,6 +203,11 @@ function game_graph(){
 				alivePopulation.push(n);
 			}			
 		});
+		if(alivePopulation.length < 1) {
+			console.log("Unable to deploy comedian as city has no audience");
+			return null;
+		}
+		
 		// set the comedian new city and deploy him to a node at random in that city
 		comedian.node = alivePopulation[Math.floor(Math.random() * alivePopulation.length)] ;	
 		comedian.node.status = "dead";
@@ -332,6 +337,10 @@ function game_graph(){
 			}			
 		});
 		// set the comedian new city and deploy him to a node at random in that city
+		if(alivePopulation.length < 1) {
+			console.log("Unable to deploy heckler as city has no audience");
+			return null;
+		}
 		heckler.node = alivePopulation[Math.floor(Math.random() * alivePopulation.length)] ;	
 		heckler.node.status = "immune";
 		heckler.move = function() {
