@@ -1,25 +1,26 @@
 -------------GRAPHICS----------------
 DONE * frenchman for heckler model
-* graphs/glyphs/bars for each city
+DONE (in text) * graphs/glyphs/bars for each city
 DONE * clicking and picking
 * some instructions text
-* read points from fintan
-* end turn button / player 2?
+DONE * read points from fintan
+DONE (replaced with AI) * end turn button / player 2?
 * story page after intro page
 * doomsday clock??
-* map occupy more vertical - perspective matrix?
+DONE * map occupy more vertical - perspective matrix?
 * some fancy scene transitions/animations
-* credits on title screen
+DONE * credits on title screen
+* disallow placing man on exhausted cities ??
 
 -------- SOUNDS-----
 DONE * various event sound effects - howler.js
 
 -------------INFRASTRUCTURE ETC.------
-* integrate our stuff / functions  <------- MOST IMPORTANT TASK
+DONE * integrate our stuff / functions  <------- MOST IMPORTANT TASK
 * testing (Hanni)
 
 --------------AI---------------------
-* fake it / cheat
+DONE * fake it / cheat
 
 -----------LOGIC---------------------
 ....
