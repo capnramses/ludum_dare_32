@@ -101,15 +101,6 @@ function init_agent_icons () {
 		gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray (2);
 
-	// dummy instances
-	add_comedian_icon (2.0, 4.0, 0);
-	add_comedian_icon (11.0, 0.0, 1);
-	add_comedian_icon (-16.0, -5.0, 1);
-	
-	add_heckler_icon (4.0, 4.0, 0);
-	add_heckler_icon (15.0, 0.0, 1);
-	add_heckler_icon (-21.0, -5.0, 1);
-	
 	agent_PV_loc = get_uniform_loc (shader_progs[1], "PV");
 	agent_M_loc = get_uniform_loc (shader_progs[1], "M");
 	agent_palette_loc = get_uniform_loc (shader_progs[1], "palette");

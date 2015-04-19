@@ -50,6 +50,9 @@ function init () {
 	
 	init_gui ();
 	
+	add_comedian_to_city (0, 1);
+	add_heckler_to_city (0, 0);
+	
 	return true;
 }
 
