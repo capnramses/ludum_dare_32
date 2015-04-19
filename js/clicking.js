@@ -1,3 +1,6 @@
+// the currently selected city's name, or "none"
+var selected_city_name = "none";
+
 var has_arthur_in_hand = false;
 var has_heckler_in_hand = false;
 var mouse_x_clip;
@@ -21,6 +24,11 @@ function update_input () {
 	if (has_arthur_in_hand) {
 		// check for closest enemy city. if within radius highlight it
 		highlight_city = get_closest_city_to (mouse_x_clip, mouse_y_clip, 0.1, 0);
+		if (highlight_city > -1) {
+			selected_city_name = city_names[highlight_city];
+		} else {
+			selected_city_name = "none";
+		}
 		
 		// if clicked then add comedian to city
 		if (mouse_is_down && highlight_city > -1) {
@@ -28,30 +36,35 @@ function update_input () {
 			has_arthur_in_hand = false;
 			add_comedian_to_city (1, highlight_city);
 			
-			var city_name = city_names[highlight_city];
-			console.log ("attempting to place comedian in " + city_name);
-			g.deployComedian ("Dylan Moran", city_name, 1.0, "stand-up");
+			console.log ("attempting to place comedian in " + selected_city_name);
+			g.deployComedian ("Dylan Moran", selected_city_name, 1.0, "stand-up");
 			//g.deployComedian ("Tim Minchin","Sydney", 1.0, "stand-up");
 			
 			var sound = new Howl ({urls: ['audio/arthur.wav']}).play();
 			highlight_city = -1;
+			selected_city_name = "none";
 			// TODO
 		}
 		
 	// show heckler moving with mouse, disallow other interactions
 	} else if (has_heckler_in_hand) {
 		highlight_city = get_closest_city_to (mouse_x_clip, mouse_y_clip, 0.1, 1);
+		if (highlight_city > -1) {
+			selected_city_name = city_names[highlight_city];
+		} else {
+			selected_city_name = "none";
+		}
 		
 		if (mouse_is_down && highlight_city > -1) {
 			has_heckler_in_hand = false;
 			add_heckler_to_city (1, highlight_city);
 			
-			var city_name = city_names[highlight_city];
-			console.log ("attempting to place heckler in " + city_name);
-			g.deployHeckler ("Dad1", city_name)
+			console.log ("attempting to place heckler in " + selected_city_name);
+			g.deployHeckler ("Dad1", selected_city_name)
 			
 			var sound = new Howl ({urls: ['audio/heckler.wav']}).play();
 			highlight_city = -1;
+			selected_city_name = "none";
 			// TODO
 		}
 	
@@ -101,6 +114,11 @@ function update_input () {
 		
 		// select city
 		highlight_city = get_closest_city_to (mouse_x_clip, mouse_y_clip, 0.1, -1);
+		if (highlight_city > -1) {
+			selected_city_name = city_names[highlight_city];
+		} else {
+			selected_city_name = "none";
+		}
 		
 		// 1. if mouse is in gui area check if close to heckler or arthur
 		
