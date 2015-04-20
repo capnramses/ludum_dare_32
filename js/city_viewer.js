@@ -60,9 +60,9 @@ vis = this;
 			.data(nodes)
             .style("fill", function(d) { 
 			  	  if(d.status == "alive") {
-			  		  return color(d.colorIndex);
+			  		return "blue"
 			  	  } else if(d.status == "immune") {
-		    		  return "pink";
+			  		return "green";
 		    	  }
 			  	  return "black";    	  
         });
@@ -128,7 +128,7 @@ function  visualiseCity(cityName, gameGraph) {
 	
 	svg.append("circle").attr("cx","70").attr("cy","20").attr("r","5").style("fill"	,"blue");
 	svg.append("text").attr("class", "legendText").text("alive").attr("x", 80).attr("y", 24).attr("text-anchor", "start")
-	svg.append("circle").attr("cx","170").attr("cy","20").attr("r","5").style("fill"	,"pink");
+	svg.append("circle").attr("cx","170").attr("cy","20").attr("r","5").style("fill"	,"green");
 	svg.append("text").attr("class", "legendText").text("immune").attr("x", 180).attr("y", 24).attr("text-anchor", "start")
 	svg.append("circle").attr("cx","270").attr("cy","20").attr("r","5").style("fill"	,"black");
 	svg.append("text").attr("class", "legendText").text("dead").attr("x", 280).attr("y", 24).attr("text-anchor", "start")
