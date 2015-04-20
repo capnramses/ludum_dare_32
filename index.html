@@ -30,25 +30,7 @@
 </div>
 </body>
 
-<!-- these special tags are just GLSL shader programmes to build
-the first one is a re-usable snippet to copy-paste into other shaders
-the second one is a proper programme with both vertex shader and fragment
-shader sections in one script
--->
-<script id="snippet.glsl" type="text/glsl">
-//
-// A trivial function to #include from other files
-//
-float snippet (float a, float b) {
-	return a + b;
-}
-</script>
-
 <script id="font.glsl" type="text/glsl">
-//
-// a test shader to see if #include works
-//
-
 #vert // this part is the vertex shader.
 
 attribute vec2 vp;
@@ -75,10 +57,6 @@ void main () {
 </script>
 
 <script id="city.glsl" type="text/glsl">
-//
-// a test shader to see if #include works
-//
-
 #vert // this part is the vertex shader.
 
 attribute vec3 vp;
@@ -128,10 +106,6 @@ void main () {
 </script>
 
 <script id="map.glsl" type="text/glsl">
-//
-// a test shader to see if #include works
-//
-
 #vert // this part is the vertex shader.
 
 attribute vec2 vp;
@@ -168,6 +142,34 @@ varying vec2 st;
 void main () {
 	st = vp * 0.5 + 0.5;
 	gl_Position = vec4 (vp.x, vp.y, 0.0, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+
+varying vec2 st;
+uniform sampler2D dm;
+
+void main () {
+	gl_FragColor = texture2D (dm, st);
+}
+</script>
+
+<script id="foot.glsl" type="text/glsl">
+//
+// a test shader to see if #include works
+//
+
+#vert // this part is the vertex shader.
+
+attribute vec2 vp;
+uniform float y;
+varying vec2 st;
+
+void main () {
+	st = vp * 0.5 + 0.5;
+	gl_Position = vec4 (vp.x, vp.y + y, 0.0, 1.0);
 }
 
 #frag // this part is the fragment shader

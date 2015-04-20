@@ -10,6 +10,7 @@ var vao_ext;
 var mouse_is_down = false;
 var mouse_canvas_x;
 var mouse_canvas_y;
+var key_is_down = false;
 
 //
 // check if an extension exists in the browser
@@ -123,3 +124,8 @@ function get_uniform_loc (sp, var_str) {
 	}
 	return loc;
 }
+
+document.onkeydown = function (event) {
+	key_is_down = true;
+}
+

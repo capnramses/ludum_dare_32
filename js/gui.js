@@ -108,7 +108,7 @@ function count_enemy_pop () {
 		var city_index = ai_city_indices[i];
 		var city_name = city_names[city_index];
 		var stats = g.getCityStats (city_name);
-		sum += stats.population;
+		sum += Number (stats.population);
 	}
 	return sum;
 }
@@ -120,7 +120,7 @@ function count_player_pop () {
 		var city_index = player_city_indices[i];
 		var city_name = city_names[city_index];
 		var stats = g.getCityStats (city_name);
-		sum += stats.population;
+		sum += Number (stats.population);
 	}
 	return sum;
 }
@@ -155,7 +155,18 @@ function update_gui (elapsed) {
 	update_text (player_pop_text, "Player Popu. " + player_pop + "%");
 	update_text (enemy_pop_text, "Enemy Popu. " + enemy_pop + "%");
 
-
-	// TODO
-	// if < 10 == game over??
+	//
+	// may as well check for end-game here
+	// if < 10 == game over
+	if (enemy_pop <= 10) {
+		won_game = true;
+		game_state = "foot";
+		console.log ("Player won the game");
+		var sound = new Howl ({urls: ['audio/fart.wav']}).play();
+	} else if (player_pop <= 10) {
+		won_game = false;
+		game_state = "foot";
+		console.log ("AI won the game");
+		var sound = new Howl ({urls: ['audio/fart.wav']}).play();
+	}
 }

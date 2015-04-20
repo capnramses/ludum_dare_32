@@ -22,6 +22,10 @@ var g;
 var city_names = [];
 var vis; //visualisation of a citys population
 
+// if game ends and this is true then we lost
+// else we won
+var won_game = false;
+
 //
 // start context and start loading assets
 //
@@ -30,10 +34,11 @@ function init () {
 	
 	// actual programmes to build from embedded in tags on the index.html page
 	var shader_prog_srcs = [
-		"map.glsl",
-		"city.glsl",
-		"title.glsl",
-		"font.glsl"
+		"map.glsl", // 0
+		"city.glsl", // 1
+		"title.glsl", // 2
+		"font.glsl", // 3
+		"foot.glsl" // 4
 	];
 	if (!load_shaders (shader_prog_srcs)) {
 		return false;
@@ -141,6 +146,9 @@ function draw_frame () {
 			draw_gui ();
 			draw_texts ();
 			break;
+		case "foot":
+			draw_foot ();
+			break;
 		default:
 	}
 	
@@ -157,12 +165,10 @@ function update (elapsed) {
 
 	switch (game_state) {
 		case "title":
-		
 			update_title (elapsed);
-		
 			break;
-		case "map":
 		
+		case "map":
 			update_input ();
 			update_ai (elapsed);
 			update_city_stats ();
@@ -180,8 +186,12 @@ function update (elapsed) {
 				
 				tic_step_accum_s -= tic_step_size;
 			}
-			
 			break;
+			
+		case "foot":
+			update_foot (elapsed);
+			break;
+			
 		default:
 	}
 }

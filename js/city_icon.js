@@ -162,7 +162,12 @@ function update_city_stats () {
 	for (var i = 0; i < n; i++) {
 		var name = city_names[i];
 		var stats = g.getCityStats (name);
-		update_text (city_texts[i], name + "\npopu. " + stats.population +
+		var popu = stats.population;
+		// HACK to hide a bug when pop is negative
+		if (popu < 0) {
+			popu = 0;
+		}
+		update_text (city_texts[i], name + "\npopu. " + popu +
 			"\nvictims: " + stats.victims);
 		// can also put  + "\nhumour " + stats.humourLevel
 	}
