@@ -211,9 +211,13 @@ function game_graph(){
 		// set the comedian new city and deploy him to a node at random in that city
 		comedian.node = alivePopulation[Math.floor(Math.random() * alivePopulation.length)] ;	
 		comedian.node.status = "dead";
+		cities[cityName].stats.population--;
+		cities[cityName].stats.victims++;
+		
 		// the audience is the ist of all poitential victioms.... i .e. neighbours of beople who have already beenkilled by the comedian
 		comedian.audience = comedian.node.neighbours;
 		comedian.city = cityName;
+		
 		comedians.push(comedian);
 		comediansMap[name] = comedian;
 		
@@ -246,22 +250,29 @@ function game_graph(){
 						interCityModifier = INTER_CITY_COEFFICIENT;
 					}
 					
+					var nodeCityName = n.city;
 					var totalScore = baseScore * me.talent * targetCityHumour * interCityModifier;
 					if(totalScore >= JOKE_THRESHOLD ) {
 						// we have a hit 
 						n.status = "dead";
 						hits++;
 						comedian.kills++;
-						cities[cityName].stats.victims++;
-						cities[cityName].stats.population--;
+						cities[nodeCityName].stats.victims++;
+						
+						if(cities[nodeCityName].stats.population <= 0) {
+							console.log("Warnign 0 nodes left")
+						}
+						
+						cities[nodeCityName].stats.population--;
 						// person is dead
 						// expanmf the audience to include their neighbours
 						n.neighbours.forEach(function(neighbour) {
 							if(neighbour.status == "alive") {
 								newAudience.push(neighbour);
 							}							
-						});						
-					} else {
+						});
+						
+											} else {
 						// joke does not land so the person is still alive
 						newAudience.push(n);		
 						misses++;
