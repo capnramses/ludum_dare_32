@@ -14,11 +14,20 @@
   stroke: #999;
   stroke-opacity: .6;
 }
+#cityView {
+	 position: absolute;
+    left: 1035px;
+    top: 10px;
+}
 
 </style>
 <body onload="main()">
 <canvas id="canvas" width="1024" height="768"></canvas>
+<div id = cityDiv>
 <svg id="cityView" width="384" height="384"></svg>
+
+</div>
+</div>
 </body>
 
 <!-- these special tags are just GLSL shader programmes to build

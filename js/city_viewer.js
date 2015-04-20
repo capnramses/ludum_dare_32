@@ -36,9 +36,9 @@ vis = this;
       .attr("r", 3)
       .style("fill", function(d) { 
     	  if(d.status == "alive") {
-    		  return color(d.colorIndex);
+    		  return "blue"
     	  }else if(d.status == "immune") {
-    		  return "pink";
+    		  return "green";
     	  }
     	  return "black" ; 	  
       });
@@ -102,9 +102,12 @@ function  visualiseCity(cityName, gameGraph) {
 	var svg = d3.select("#cityView");
 	svg.selectAll(".node").remove();
 	svg.selectAll(".link").remove();
+	svg.selectAll("text").remove();
 	
 	if(cityName != "none") {
-		
+
+		var width = parseInt(svg.attr("width")),
+				height = parseInt(svg.attr("height")) ;		
 	
 	
 	var cityNodes = gameGraph.getCityNodes(cityName);
@@ -115,9 +118,22 @@ function  visualiseCity(cityName, gameGraph) {
 	}
 	
 	if(cityNodes[0].x == null) {
-		positionCityNodes(cityName, gameGraph)
-		
+		positionCityNodes(cityName, gameGraph)		
 	}
+	var cName = svg.append("text");
+	cName.text(cityName);
+	cName.attr("x", width /2);
+	cName.attr("y", height - 20);
+	cName.attr("text-anchor", "middle");
+	
+	svg.append("circle").attr("cx","70").attr("cy","20").attr("r","5").style("fill"	,"blue");
+	svg.append("text").attr("class", "legendText").text("alive").attr("x", 80).attr("y", 24).attr("text-anchor", "start")
+	svg.append("circle").attr("cx","170").attr("cy","20").attr("r","5").style("fill"	,"pink");
+	svg.append("text").attr("class", "legendText").text("immune").attr("x", 180).attr("y", 24).attr("text-anchor", "start")
+	svg.append("circle").attr("cx","270").attr("cy","20").attr("r","5").style("fill"	,"black");
+	svg.append("text").attr("class", "legendText").text("dead").attr("x", 280).attr("y", 24).attr("text-anchor", "start")
+	
+	
 	var vis = cityViewer(cityNodes, cityEdges);
 	
 	return vis;
